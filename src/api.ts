@@ -14,9 +14,9 @@ export async function count() {
   return callMain("count")
 }
 
-function callMain(fnName: string) {
+function callMain(fnName: string, ...args: any[]) {
   return new Promise<number>(function (resolve) {
     once(`RES_${fnName}`, (returnValue) => resolve(returnValue))
-    emit(`REQ_${fnName}`)
+    emit(`REQ_${fnName}`, ...args)
   })
 }

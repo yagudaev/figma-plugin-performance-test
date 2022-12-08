@@ -13,13 +13,15 @@ import { useCallback, useState } from "preact/hooks"
 
 import * as MainAPI from "./api"
 
+const formatter = Intl.NumberFormat("en", { notation: "compact" })
+
 function Plugin() {
   const [text, setText] = useState<string | null>(null)
   const handleCountMain = useCallback(async function () {
     setText(null)
     const start = Date.now()
-    await MainAPI.count()
-    setText(`Time Taken: ${Date.now() - start}ms`)
+    const countTarget = await MainAPI.count()
+    setText(`Time Taken: ${Date.now() - start}ms. Count: ${formatter.format(countTarget)}`)
   }, [])
 
   return (
