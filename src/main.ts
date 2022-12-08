@@ -1,6 +1,5 @@
 import { emit, on, showUI } from "@create-figma-plugin/utilities"
 import Timeout from "await-timeout"
-import { ReqCountHandler, ResCountHandler } from "./api"
 
 export default function () {
   exposeToUI(count)
@@ -14,9 +13,9 @@ async function count() {
 }
 
 function exposeToUI(fn: () => Promise<number>) {
-  console.log("called by function with name", fn.name)
-  on<ReqCountHandler>("REQ_COUNT", async () => {
+  const name = fn.name
+  on(`REQ_${name}`, async () => {
     const returnValue = await fn()
-    emit<ResCountHandler>("RES_COUNT", returnValue)
+    emit(`RES_${name}`, returnValue)
   })
 }

@@ -1,18 +1,22 @@
 import { emit, EventHandler, once } from "@create-figma-plugin/utilities"
 
 export interface ReqCountHandler extends EventHandler {
-  name: "REQ_COUNT"
+  name: "REQ_count"
   handler: () => void
 }
 
 export interface ResCountHandler extends EventHandler {
-  name: "RES_COUNT"
+  name: "RES_count"
   handler: (returnValue: number) => void
 }
 
 export async function count() {
+  return callMain("count")
+}
+
+function callMain(fnName: string) {
   return new Promise<number>(function (resolve) {
-    once<ResCountHandler>("RES_COUNT", (returnValue) => resolve(returnValue))
-    emit<ReqCountHandler>("REQ_COUNT")
+    once(`RES_${fnName}`, (returnValue) => resolve(returnValue))
+    emit(`REQ_${fnName}`)
   })
 }
