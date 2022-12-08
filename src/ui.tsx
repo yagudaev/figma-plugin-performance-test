@@ -11,30 +11,30 @@ import { emit } from "@create-figma-plugin/utilities"
 import { h } from "preact"
 import { useCallback, useState } from "preact/hooks"
 
-import { InsertCodeHandler } from "./types"
+import * as MainAPI from "./api"
 
 function Plugin() {
-  const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`)
-  const handleInsertCodeButtonClick = useCallback(
-    function () {
-      emit<InsertCodeHandler>("INSERT_CODE", code)
-    },
-    [code]
-  )
+  const [text, setText] = useState<string | null>(null)
+  const handleCountMain = useCallback(async function () {
+    const start = Date.now()
+    await MainAPI.count()
+    setText(`Time Taken: ${Date.now() - start}ms`)
+  }, [])
+
   return (
     <Container space='medium'>
       <MiddleAlign>
         <Columns space={"small"}>
-          <Button fullWidth onClick={handleInsertCodeButtonClick}>
+          <Button fullWidth onClick={handleCountMain}>
             Count Main
           </Button>
 
-          <Button fullWidth onClick={handleInsertCodeButtonClick}>
+          <Button fullWidth onClick={handleCountMain}>
             Count UI
           </Button>
         </Columns>
         <VerticalSpace space='small' />
-        <Text align={"center"}>Time Taken: 100ms</Text>
+        {text && <Text align={"center"}>{text}</Text>}
       </MiddleAlign>
     </Container>
   )

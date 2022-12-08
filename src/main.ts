@@ -1,10 +1,9 @@
 import { once, showUI } from "@create-figma-plugin/utilities"
-
-import { InsertCodeHandler } from "./types"
+import { ReqCountHandler } from "./api"
 
 export default function () {
-  once<InsertCodeHandler>("INSERT_CODE", async function (code: string) {
-    console.log("Received code from UI:", code)
+  once<ReqCountHandler>("REQ_COUNT", async function () {
+    console.log("It's the final countdown! Tananana nanana nanana")
   })
   showUI({ height: 240, width: 320 })
 }
