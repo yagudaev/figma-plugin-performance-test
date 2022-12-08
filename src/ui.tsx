@@ -5,7 +5,8 @@ import {
   render,
   VerticalSpace,
   Text,
-  MiddleAlign
+  MiddleAlign,
+  Toggle
 } from "@create-figma-plugin/ui"
 import { emit } from "@create-figma-plugin/utilities"
 import { h } from "preact"
@@ -35,6 +36,10 @@ function Plugin() {
         </Columns>
         <VerticalSpace space='small' />
         {text && <Text align={"center"}>{text}</Text>}
+        <VerticalSpace space='small' />
+        <Toggle value={false}>
+          <Text>Useless fidget</Text>
+        </Toggle>
       </MiddleAlign>
     </Container>
   )
