@@ -8,7 +8,6 @@ import {
   MiddleAlign,
   Toggle
 } from "@create-figma-plugin/ui"
-import { emit } from "@create-figma-plugin/utilities"
 import { h } from "preact"
 import { useCallback, useState } from "preact/hooks"
 
@@ -17,6 +16,7 @@ import * as MainAPI from "./api"
 function Plugin() {
   const [text, setText] = useState<string | null>(null)
   const handleCountMain = useCallback(async function () {
+    setText(null)
     const start = Date.now()
     await MainAPI.count()
     setText(`Time Taken: ${Date.now() - start}ms`)

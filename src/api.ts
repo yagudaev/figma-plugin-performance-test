@@ -1,4 +1,4 @@
-import { emit, EventHandler, on, once } from "@create-figma-plugin/utilities"
+import { emit, EventHandler, once } from "@create-figma-plugin/utilities"
 
 export interface ReqCountHandler extends EventHandler {
   name: "REQ_COUNT"
