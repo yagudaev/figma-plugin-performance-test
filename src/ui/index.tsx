@@ -10,6 +10,7 @@ import {
 } from "@create-figma-plugin/ui"
 import { h } from "preact"
 import { useCallback, useState } from "preact/hooks"
+import { count } from "./count"
 
 import * as MainAPI from "./mainApi"
 
@@ -20,11 +21,18 @@ function Plugin() {
   const handleCountMain = useCallback(async function () {
     setText(null)
     const start = Date.now()
-    const promises = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => MainAPI.debugTest(num))
-    const results = await Promise.all(promises)
-    console.log("[ui] Promise.all results", results)
+
+    // const promises = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => MainAPI.debugTest(num))
+    // const results = await Promise.all(promises)
+    // console.log("[ui] Promise.all results", results)
 
     const countTarget = await MainAPI.count()
+    setText(`Time Taken: ${Date.now() - start}ms. Count: ${formatter.format(countTarget)}`)
+  }, [])
+
+  const handleCountUI = useCallback(async function () {
+    const start = Date.now()
+    const countTarget = count()
     setText(`Time Taken: ${Date.now() - start}ms. Count: ${formatter.format(countTarget)}`)
   }, [])
 
@@ -36,7 +44,7 @@ function Plugin() {
             Count Main
           </Button>
 
-          <Button fullWidth onClick={handleCountMain}>
+          <Button fullWidth onClick={handleCountUI}>
             Count UI
           </Button>
         </Columns>

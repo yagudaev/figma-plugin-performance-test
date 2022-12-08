@@ -1,4 +1,4 @@
-import { COUNT_TARGET } from "../index"
+import { COUNT_TARGET } from "../../constants"
 
 export async function count() {
   console.log("[main] Starting to count...")
