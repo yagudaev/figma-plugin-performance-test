@@ -11,7 +11,7 @@ import {
 import { h } from "preact"
 import { useCallback, useState } from "preact/hooks"
 
-import * as MainAPI from "./api"
+import * as MainAPI from "./mainApi"
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" })
 
