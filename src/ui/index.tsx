@@ -20,7 +20,10 @@ function Plugin() {
   const handleCountMain = useCallback(async function () {
     setText(null)
     const start = Date.now()
-    const debugTest = await MainAPI.debugTest()
+    const promises = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => MainAPI.debugTest(num))
+    const results = await Promise.all(promises)
+    console.log("[ui] Promise.all results", results)
+
     const countTarget = await MainAPI.count()
     setText(`Time Taken: ${Date.now() - start}ms. Count: ${formatter.format(countTarget)}`)
   }, [])

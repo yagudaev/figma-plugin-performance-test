@@ -11,6 +11,6 @@ type DebugTestType = (
   ...args: Parameters<typeof DebugTest>
 ) => Promise<ReturnType<typeof DebugTest>>
 
-export const debugTest: DebugTestType = async function () {
-  return callMain("debugTest")
+export const debugTest: DebugTestType = async function (num: number) {
+  return callMain("debugTest", num)
 }

@@ -1,7 +1,7 @@
 import { COUNT_TARGET } from "../index"
 
 export async function count() {
-  console.log("Starting to count...")
+  console.log("[main] Starting to count...")
 
   let value = 0
   for (let i = 0; i < COUNT_TARGET; i++) {
@@ -10,7 +10,7 @@ export async function count() {
   return value
 }
 
-export function debugTest() {
-  console.log("Debugging test")
-  return "Debugging test"
+export function debugTest(num: number) {
+  console.log("[main] Debugging test", num)
+  return num
 }
