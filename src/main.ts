@@ -1,5 +1,5 @@
-import { emit, on, showUI } from "@create-figma-plugin/utilities"
-import Timeout from "await-timeout"
+import { showUI } from "@create-figma-plugin/utilities"
+import { exposeToUI } from "./lib"
 
 const COUNT_TARGET = 5_600_000_000
 
@@ -16,12 +16,4 @@ async function count() {
     value = i
   }
   return value
-}
-
-function exposeToUI(fn: (...args: any[]) => Promise<number>) {
-  const name = fn.name
-  on(`REQ_${name}`, async (...args: any[]) => {
-    const returnValue = await fn(...args)
-    emit(`RES_${name}`, returnValue)
-  })
 }
