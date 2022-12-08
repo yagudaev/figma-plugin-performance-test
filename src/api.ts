@@ -7,12 +7,12 @@ export interface ReqCountHandler extends EventHandler {
 
 export interface ResCountHandler extends EventHandler {
   name: "RES_COUNT"
-  handler: () => void
+  handler: (returnValue: number) => void
 }
 
 export async function count() {
-  return new Promise<void>(function (resolve) {
-    once<ResCountHandler>("RES_COUNT", resolve)
+  return new Promise<number>(function (resolve) {
+    once<ResCountHandler>("RES_COUNT", (returnValue) => resolve(returnValue))
     emit<ReqCountHandler>("REQ_COUNT")
   })
 }
