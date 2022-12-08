@@ -14,3 +14,7 @@ export function exposeToUI(fn: (...args: any[]) => any) {
     emit(`RES_${name}`, returnValue)
   })
 }
+
+export function exposeAllToUI(actions: any) {
+  Object.keys(actions).map((actionName: string) => exposeToUI((actions as any)[actionName]))
+}
