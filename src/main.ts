@@ -9,12 +9,13 @@ export default function () {
 }
 
 async function count() {
-  console.log("It's the final countdown! Tananana nanana nanana")
-  // await Timeout.set(1000)
+  console.log("Starting to count...")
+
+  let value = 0
   for (let i = 0; i < COUNT_TARGET; i++) {
-    // console.log(i)
+    value = i
   }
-  return COUNT_TARGET
+  return value
 }
 
 function exposeToUI(fn: (...args: any[]) => Promise<number>) {
