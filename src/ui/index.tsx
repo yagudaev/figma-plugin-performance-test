@@ -20,6 +20,7 @@ function Plugin() {
   const handleCountMain = useCallback(async function () {
     setText(null)
     const start = Date.now()
+    const debugTest = await MainAPI.debugTest()
     const countTarget = await MainAPI.count()
     setText(`Time Taken: ${Date.now() - start}ms. Count: ${formatter.format(countTarget)}`)
   }, [])
