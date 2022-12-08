@@ -22,3 +22,8 @@ export function exposeToUI(fn: (...args: any[]) => any) {
 export function exposeAllToUI(actions: any) {
   Object.keys(actions).map((actionName: string) => exposeToUI((actions as any)[actionName]))
 }
+
+export type AsyncActionType<F extends (...args: any) => any> = F
+export type SyncActionType<F extends (...args: any) => any> = (
+  ...args: Parameters<F>
+) => Promise<ReturnType<F>>

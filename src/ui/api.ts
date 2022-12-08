@@ -1,16 +1,10 @@
-import type { count as Count, debugTest as DebugTest } from "../main/actions"
-import { callMain } from "../lib"
+import type * as Actions from "../main/actions"
+import { AsyncActionType, callMain, SyncActionType } from "../lib"
 
-type CountType = typeof Count
-
-export const count: CountType = async function () {
+export const count: AsyncActionType<typeof Actions.count> = async function () {
   return callMain("count")
 }
 
-type DebugTestType = (
-  ...args: Parameters<typeof DebugTest>
-) => Promise<ReturnType<typeof DebugTest>>
-
-export const debugTest: DebugTestType = async function (num: number) {
+export const debugTest: SyncActionType<typeof Actions.debugTest> = async function (num: number) {
   return callMain("debugTest", num)
 }
