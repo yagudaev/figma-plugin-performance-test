@@ -5,6 +5,10 @@ export const count: AsyncActionType<typeof Actions.count> = async function () {
   return callMain("count")
 }
 
+export const countChunked: AsyncActionType<typeof Actions.countChunked> = async function () {
+  return callMain("countChunked")
+}
+
 // try calling it like this:
 //
 // const promises = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => MainAPI.debugTest(num))

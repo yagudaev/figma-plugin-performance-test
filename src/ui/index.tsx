@@ -10,7 +10,7 @@ import {
 } from "@create-figma-plugin/ui"
 import { h } from "preact"
 import { useCallback, useState } from "preact/hooks"
-import { count } from "./count"
+import { count, countChunked } from "./count"
 
 import * as MainAPI from "./mainApi"
 
@@ -31,6 +31,19 @@ function Plugin() {
     setText(`Time Taken: ${Date.now() - start}ms. Count: ${formatter.format(countTarget)}`)
   }, [])
 
+  const handleCountChunkedMain = useCallback(async function () {
+    setText(null)
+    const start = Date.now()
+    const countTarget = await MainAPI.countChunked()
+    setText(`Time Taken: ${Date.now() - start}ms. Count: ${formatter.format(countTarget)}`)
+  }, [])
+
+  const handleCountChunkedUI = useCallback(async function () {
+    const start = Date.now()
+    const countTarget = countChunked()
+    setText(`Time Taken: ${Date.now() - start}ms. Count: ${formatter.format(countTarget)}`)
+  }, [])
+
   return (
     <Container space='medium'>
       <MiddleAlign>
@@ -41,6 +54,15 @@ function Plugin() {
 
           <Button fullWidth onClick={handleCountUI}>
             Count UI
+          </Button>
+        </Columns>
+        <Columns space={"small"} style={{ marginTop: 8 }}>
+          <Button fullWidth onClick={handleCountChunkedMain}>
+            Count Chunked Main
+          </Button>
+
+          <Button fullWidth onClick={handleCountChunkedUI}>
+            Count Chunked UI
           </Button>
         </Columns>
         <VerticalSpace space='small' />
