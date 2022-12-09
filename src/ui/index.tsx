@@ -18,6 +18,10 @@ const formatter = Intl.NumberFormat("en", { notation: "compact" })
 
 function Plugin() {
   const [text, setText] = useState<string | null>(null)
+  const [progress, setProgress] = useState<number | null>(null)
+  const [progressText, setProgressText] = useState<string | null>(null)
+  const [fidgetValue, setFidgetValue] = useState(false)
+
   const handleCountMain = useCallback(async function () {
     setText(null)
     const start = Date.now()
@@ -35,8 +39,16 @@ function Plugin() {
     setText(null)
     const start = Date.now()
     const countTarget = await MainAPI.countChunked({
-      onProgress: (progress) => console.log("[ui] progress", progress)
+      onProgress: (progress) => {
+        const percentage = progress.value / progress.total
+        setProgress(percentage)
+        setProgressText(
+          `Counted to: ${formatter.format(progress.value)} (${Math.round(percentage * 100)})%`
+        )
+      }
     })
+    setProgress(null)
+    setProgressText(null)
     setText(`Time Taken: ${Date.now() - start}ms. Count: ${formatter.format(countTarget)}`)
   }, [])
 
@@ -69,8 +81,15 @@ function Plugin() {
         </Columns>
         <VerticalSpace space='small' />
         {text && <Text align={"center"}>{text}</Text>}
+        <div style={{ marginTop: 8 }}>
+          {progress && <div>Bar coming soon: {progressText}</div>}
+          {progressText && <Text>{progressText}</Text>}
+        </div>
         <VerticalSpace space='small' />
-        <Toggle value={false}>
+        <Toggle
+          value={fidgetValue}
+          onChange={(event) => setFidgetValue(event.currentTarget.checked)}
+        >
           <Text>Useless fidget</Text>
         </Toggle>
       </MiddleAlign>

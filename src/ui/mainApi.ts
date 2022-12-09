@@ -17,3 +17,7 @@ export const countChunked: AsyncActionType<typeof Actions.countChunked> = async 
 export const debugTest: SyncActionType<typeof Actions.debugTest> = async function (num: number) {
   return callMain("debugTest", num)
 }
+
+export const foo: SyncActionType<typeof Actions.foo> = async function () {
+  return callMain("foo")
+}

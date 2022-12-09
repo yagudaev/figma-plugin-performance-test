@@ -63,6 +63,12 @@ function countChunk(from: number, to: number) {
 }
 
 export function debugTest(num: number) {
-  console.log("[main] Debugging test", num)
+  const pageName = figma.currentPage.name
+  console.log("[main] Debugging test", num, pageName)
+
   return num
+}
+
+export function foo() {
+  console.log("[main] foo")
 }
