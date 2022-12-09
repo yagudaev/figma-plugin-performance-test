@@ -12,9 +12,21 @@ export async function count() {
   return value
 }
 
+interface CountChunkedOptions {
+  onProgress?: (progress: {
+    value: number
+    total: number
+    chunk: number
+    numChunks: number
+    chunkSize: number
+  }) => void
+}
+
 // TOOD: how do you determine the optimal chunk size?
 const CHUNK_SIZE = 500_000 // 5 million in 10ms counted
-export async function countChunked() {
+const defaultOptions = { onProgress: () => {} }
+
+export async function countChunked(options: CountChunkedOptions = defaultOptions) {
   console.log("[main] Starting to count chunked...")
 
   const numChunks = Math.ceil(COUNT_TARGET / CHUNK_SIZE)
@@ -23,6 +35,16 @@ export async function countChunked() {
     const from = i * CHUNK_SIZE
     const to = Math.min((i + 1) * CHUNK_SIZE, COUNT_TARGET)
     value = countChunk(from, to)
+
+    // broadcast progress
+    options.onProgress &&
+      options.onProgress({
+        value: value + 1, // +1 because we are counting from 0
+        total: COUNT_TARGET,
+        chunk: i,
+        numChunks,
+        chunkSize: CHUNK_SIZE
+      })
 
     // wait for next tick to avoid blocking the main thread
     await Timeout.set(0)

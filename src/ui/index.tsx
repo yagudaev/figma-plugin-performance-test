@@ -34,7 +34,9 @@ function Plugin() {
   const handleCountChunkedMain = useCallback(async function () {
     setText(null)
     const start = Date.now()
-    const countTarget = await MainAPI.countChunked()
+    const countTarget = await MainAPI.countChunked({
+      onProgress: (progress) => console.log("[ui] progress", progress)
+    })
     setText(`Time Taken: ${Date.now() - start}ms. Count: ${formatter.format(countTarget)}`)
   }, [])
 

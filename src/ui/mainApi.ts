@@ -5,8 +5,8 @@ export const count: AsyncActionType<typeof Actions.count> = async function () {
   return callMain("count")
 }
 
-export const countChunked: AsyncActionType<typeof Actions.countChunked> = async function () {
-  return callMain("countChunked")
+export const countChunked: AsyncActionType<typeof Actions.countChunked> = async function (options) {
+  return callMain("countChunked", options)
 }
 
 // try calling it like this:
