@@ -1,7 +1,14 @@
 import { emit, on, once } from "@create-figma-plugin/utilities"
 
+export type AsyncActionType<F extends (...args: any) => any> = F
+export type SyncActionType<F extends (...args: any) => any> = (
+  ...args: Parameters<F>
+) => Promise<ReturnType<F>>
+
 let lastCallerId = 0
 let lastSubscriptionId = 0
+const subscriptions = new Map<string, Function[]>()
+
 export function callMain(fnName: string, ...args: any[]) {
   lastCallerId += 1
   const callerId = lastCallerId
@@ -21,7 +28,20 @@ export function callMain(fnName: string, ...args: any[]) {
   })
 }
 
-const subscriptions = new Map<string, Function[]>()
+export function exposeToUI(fn: (...args: any[]) => any) {
+  const name = fn.name
+  on(`REQ_${name}`, async (callerId: number, ...reqArgs: any[]) => {
+    reqArgs = reqArgs.map((arg) => checkForSubscriptions(name, callerId, arg))
+    const returnValue = await fn(...reqArgs)
+    emit(`RES_${name}_${callerId}`, returnValue)
+  })
+}
+
+export function exposeAllToUI(actions: any) {
+  Object.keys(actions).map((actionName: string) => exposeToUI((actions as any)[actionName]))
+}
+
+// helper functions
 function checkForCallbacks(fnName: string, callerId: number, arg: any) {
   if (typeof arg === "object") {
     return {
@@ -60,15 +80,6 @@ function getSubscriptionStringPrefix(fnName: string, callerId: number): string {
   return `SUB_${fnName}_${callerId}`
 }
 
-export function exposeToUI(fn: (...args: any[]) => any) {
-  const name = fn.name
-  on(`REQ_${name}`, async (callerId: number, ...reqArgs: any[]) => {
-    reqArgs = reqArgs.map((arg) => checkForSubscriptions(name, callerId, arg))
-    const returnValue = await fn(...reqArgs)
-    emit(`RES_${name}_${callerId}`, returnValue)
-  })
-}
-
 function checkForSubscriptions(fnName: string, callerId: number, arg: any) {
   if (typeof arg === "object" && !arg.__SUBSCRIPTION__) {
     return {
@@ -85,12 +96,3 @@ function checkForSubscriptions(fnName: string, callerId: number, arg: any) {
     emit(getSubscriptionString(fnName, callerId, subscriptionId), subscriptionId, ...args)
   }
 }
-
-export function exposeAllToUI(actions: any) {
-  Object.keys(actions).map((actionName: string) => exposeToUI((actions as any)[actionName]))
-}
-
-export type AsyncActionType<F extends (...args: any) => any> = F
-export type SyncActionType<F extends (...args: any) => any> = (
-  ...args: Parameters<F>
-) => Promise<ReturnType<F>>
