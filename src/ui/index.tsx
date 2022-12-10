@@ -53,8 +53,19 @@ function Plugin() {
   }, [])
 
   const handleCountChunkedUI = useCallback(async function () {
+    setText(null)
     const start = Date.now()
-    const countTarget = countChunked()
+    const countTarget = await countChunked({
+      onProgress: (progress) => {
+        const percentage = progress.value / progress.total
+        setProgress(percentage)
+        setProgressText(
+          `Counted to: ${formatter.format(progress.value)} (${Math.round(percentage * 100)})%`
+        )
+      }
+    })
+    setProgress(null)
+    setProgressText(null)
     setText(`Time Taken: ${Date.now() - start}ms. Count: ${formatter.format(countTarget)}`)
   }, [])
 
