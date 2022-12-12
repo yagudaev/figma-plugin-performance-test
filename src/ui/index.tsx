@@ -74,7 +74,7 @@ function Plugin() {
     try {
       await MainAPI.throwError()
     } catch (error) {
-      setText(`Error from main: ${JSON.stringify(error)}`)
+      setText(`Error from main: ${(error as Error).message}`)
       throw error
     }
   }, [])

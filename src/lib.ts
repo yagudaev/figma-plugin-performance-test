@@ -27,14 +27,16 @@ export function callMain(fnName: string, ...args: any[]) {
     })
     once(`ERR_${fnName}_${callerId}`, (error) => {
       cleanUpSubscriptions()
-      let errorJson
+      let errorObj
       try {
-        errorJson = JSON.parse(error)
+        const errorJson = JSON.parse(error)
+        errorObj = new Error(errorJson.message)
+        errorObj.stack = errorJson.stack
       } catch (error) {
-        errorJson = "Unknown error"
+        errorObj = new Error("Unknown error")
       }
-      console.log("[ui] error", errorJson)
-      reject(errorJson)
+      console.log("[ui] error", errorObj)
+      reject(errorObj)
     })
     emit(`REQ_${fnName}`, callerId, ...args)
   })
