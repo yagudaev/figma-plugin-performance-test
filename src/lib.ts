@@ -1,5 +1,4 @@
 import { emit, on, once } from "@create-figma-plugin/utilities"
-import { serializeError, deserializeError } from "serialize-error"
 
 export type AsyncActionType<F extends (...args: any) => any> = F
 export type SyncActionType<F extends (...args: any) => any> = (
