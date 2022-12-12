@@ -21,3 +21,7 @@ export const debugTest: SyncActionType<typeof Actions.debugTest> = async functio
 export const foo: SyncActionType<typeof Actions.foo> = async function () {
   return callMain("foo")
 }
+
+export const throwError: AsyncActionType<typeof Actions.throwError> = async function () {
+  return callMain("throwError")
+}

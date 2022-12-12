@@ -72,3 +72,8 @@ export function debugTest(num: number) {
 export function foo() {
   console.log("[main] foo")
 }
+
+export async function throwError() {
+  console.log("[main] throwing error...")
+  throw new Error("This is an error")
+}

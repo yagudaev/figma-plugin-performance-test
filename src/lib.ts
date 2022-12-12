@@ -1,4 +1,5 @@
 import { emit, on, once } from "@create-figma-plugin/utilities"
+import { serializeError, deserializeError } from "serialize-error"
 
 export type AsyncActionType<F extends (...args: any) => any> = F
 export type SyncActionType<F extends (...args: any) => any> = (
@@ -14,15 +15,27 @@ export function callMain(fnName: string, ...args: any[]) {
   const callerId = lastCallerId
 
   args = args.map((arg) => checkForCallbacks(fnName, callerId, arg))
+  function cleanUpSubscriptions() {
+    const unsubscribes = subscriptions.get(getSubscriptionStringPrefix(fnName, callerId))
+    unsubscribes?.forEach((unsubscribe) => unsubscribe())
+    subscriptions.set(getSubscriptionStringPrefix(fnName, callerId), [])
+  }
 
-  return new Promise<any>(function (resolve) {
+  return new Promise<any>(function (resolve, reject) {
     once(`RES_${fnName}_${callerId}`, (returnValue) => {
       resolve(returnValue)
-
-      // cleanup subscriptions
-      const unsubscribes = subscriptions.get(getSubscriptionStringPrefix(fnName, callerId))
-      unsubscribes?.forEach((unsubscribe) => unsubscribe())
-      subscriptions.set(getSubscriptionStringPrefix(fnName, callerId), [])
+      cleanUpSubscriptions()
+    })
+    once(`ERR_${fnName}_${callerId}`, (error) => {
+      cleanUpSubscriptions()
+      let errorJson
+      try {
+        errorJson = JSON.parse(error)
+      } catch (error) {
+        errorJson = "Unknown error"
+      }
+      console.log("[ui] error", errorJson)
+      reject(errorJson)
     })
     emit(`REQ_${fnName}`, callerId, ...args)
   })
@@ -32,8 +45,13 @@ export function exposeToUI(fn: (...args: any[]) => any) {
   const name = fn.name
   on(`REQ_${name}`, async (callerId: number, ...reqArgs: any[]) => {
     reqArgs = reqArgs.map((arg) => checkForSubscriptions(name, callerId, arg))
-    const returnValue = await fn(...reqArgs)
-    emit(`RES_${name}_${callerId}`, returnValue)
+    try {
+      const returnValue = await fn(...reqArgs)
+      emit(`RES_${name}_${callerId}`, returnValue)
+    } catch (error) {
+      const errorStr = JSON.stringify(error, Object.getOwnPropertyNames(error))
+      emit(`ERR_${name}_${callerId}`, errorStr)
+    }
   })
 }
 
