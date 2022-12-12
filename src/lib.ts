@@ -35,7 +35,6 @@ export function callMain(fnName: string, ...args: any[]) {
       } catch (error) {
         errorObj = new Error("Unknown error")
       }
-      console.log("[ui] error", errorObj)
       reject(errorObj)
     })
     emit(`REQ_${fnName}`, callerId, ...args)
