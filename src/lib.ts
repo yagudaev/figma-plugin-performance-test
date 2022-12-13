@@ -35,7 +35,7 @@ export function callMain(fnName: string, ...args: any[]) {
         } else {
           errorObj = new Error(errorJson.message ?? "Unknown error")
         }
-        errorObj.stack = errorJson.stack
+        errorObj.stack += `\n${errorJson.stack}`
       } catch (error) {
         errorObj = new Error("Unknown error")
       }
