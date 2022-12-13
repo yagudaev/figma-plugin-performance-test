@@ -30,7 +30,11 @@ export function callMain(fnName: string, ...args: any[]) {
       let errorObj
       try {
         const errorJson = JSON.parse(error)
-        errorObj = new Error(errorJson.message)
+        if (typeof errorJson === "string") {
+          errorObj = new Error(errorJson)
+        } else {
+          errorObj = new Error(errorJson.message ?? "Unknown error")
+        }
         errorObj.stack = errorJson.stack
       } catch (error) {
         errorObj = new Error("Unknown error")
@@ -49,7 +53,13 @@ export function exposeToUI(fn: (...args: any[]) => any) {
       const returnValue = await fn(...reqArgs)
       emit(`RES_${name}_${callerId}`, returnValue)
     } catch (error) {
-      const errorStr = JSON.stringify(error, Object.getOwnPropertyNames(error))
+      let errorStr
+      if (typeof error === "string") {
+        const errorObj = new Error(error)
+        errorStr = JSON.stringify(errorObj, Object.getOwnPropertyNames(errorObj))
+      } else {
+        errorStr = JSON.stringify(error, Object.getOwnPropertyNames(error))
+      }
       emit(`ERR_${name}_${callerId}`, errorStr)
     }
   })
