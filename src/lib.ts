@@ -101,7 +101,6 @@ function checkForCallbacks(fnName: string, callerId: number, arg: any) {
     unsubscribe
   ])
 
-  // TODO: this might also be a problem with minification
   return { subscriptionId, fnName: arg.name, __SUBSCRIPTION__: true }
 }
 
