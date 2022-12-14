@@ -46,7 +46,7 @@ export function callMain(fnName: string, ...args: any[]) {
 }
 
 export function exposeToUI(fn: (...args: any[]) => any) {
-  const name = fn.name
+  const name = (fn as any).actionName as string
   on(`REQ_${name}`, async (callerId: number, ...reqArgs: any[]) => {
     reqArgs = reqArgs.map((arg) => checkForSubscriptions(name, callerId, arg))
     try {
@@ -65,8 +65,12 @@ export function exposeToUI(fn: (...args: any[]) => any) {
   })
 }
 
-export function exposeAllToUI(actions: any) {
-  Object.keys(actions).map((actionName: string) => exposeToUI((actions as any)[actionName]))
+export function exposeAllToUI(actions: { [key: string]: (...args: any[]) => any }) {
+  Object.keys(actions).map((actionName: string) => {
+    const fn = actions[actionName] as any
+    fn.actionName = actionName // protect against minification
+    exposeToUI(fn)
+  })
 }
 
 // helper functions
@@ -97,6 +101,7 @@ function checkForCallbacks(fnName: string, callerId: number, arg: any) {
     unsubscribe
   ])
 
+  // TODO: this might also be a problem with minification
   return { subscriptionId, fnName: arg.name, __SUBSCRIPTION__: true }
 }
 

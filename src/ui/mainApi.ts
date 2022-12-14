@@ -25,3 +25,13 @@ export const foo: SyncActionType<typeof Actions.foo> = async function () {
 export const throwError: AsyncActionType<typeof Actions.throwError> = async function () {
   return callMain("throwError")
 }
+
+export const positionalCallback: SyncActionType<typeof Actions.positionalCallback> = (
+  onProgress
+) => {
+  return callMain("positionalCallback", onProgress)
+}
+
+export const namedCallback: SyncActionType<typeof Actions.namedCallback> = (options) => {
+  return callMain("namedCallback", options)
+}

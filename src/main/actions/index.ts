@@ -77,3 +77,13 @@ export async function throwError() {
   console.log("[main] throwing error...")
   throw new Error("This is an error")
 }
+
+export const positionalCallback = function (onProgress: (progress: number) => void) {
+  onProgress(123)
+  return 456
+}
+
+export const namedCallback = function ({ onProgress }: { onProgress: (progress: number) => void }) {
+  onProgress(123)
+  return 456
+}

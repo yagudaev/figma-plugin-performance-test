@@ -79,6 +79,22 @@ function Plugin() {
     }
   }, [])
 
+  const handlePositionalCallback = useCallback(async function () {
+    setText(null)
+    await MainAPI.positionalCallback((progress) => {
+      setText(`Positional Callbacks: Success ${progress}`)
+    })
+  }, [])
+
+  const handleNamedCallback = useCallback(async function () {
+    setText(null)
+    await MainAPI.namedCallback({
+      onProgress: (progress) => {
+        setText(`Named Callbacks: Success ${progress}`)
+      }
+    })
+  }, [])
+
   return (
     <Container space='medium'>
       <MiddleAlign>
@@ -108,6 +124,15 @@ function Plugin() {
           {/* <Button fullWidth onClick={handleCountChunkedUI}>
             Count Chunked UI
           </Button> */}
+        </Columns>
+        <Columns space={"small"} style={{ marginTop: 8 }}>
+          <Button fullWidth onClick={handlePositionalCallback}>
+            Test Positional Callback
+          </Button>
+
+          <Button fullWidth onClick={handleNamedCallback}>
+            Test Named Callback
+          </Button>
         </Columns>
         <VerticalSpace space='small' />
         {text && <Text align={"center"}>{text}</Text>}
